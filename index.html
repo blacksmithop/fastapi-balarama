@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Viewer</title>
+    <!-- Include Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Set the image size to fit within the container without causing overflow */
+      .image-container {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        margin: 0 auto; /* Center the image within the container */
+      }
+
+      /* Add some space for the sticky footer */
+      body {
+        margin: 0;
+        padding-bottom: 60px;
+      }
+
+      img {
+        width: 600px;
+        height: 600px;
+      }
+
+      /* Sticky footer styles */
+      .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #f5f5f5;
+        text-align: center;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Image Viewer</a>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <label for="year" class="form-label">Year:</label>
+            <select class="form-select" id="year">
+              <option value="2020">2020</option>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023">2023</option>
+            </select>
+          </li>
+          <li class="nav-item">
+            <label for="month" class="form-label">Month:</label>
+            <select class="form-select" id="month">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>
+          </li>
+          <li class="nav-item">
+            <label for="date" class="form-label">Date:</label>
+            <select class="form-select" id="date">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+              <option value="21">21</option>
+              <option value="22">22</option>
+              <option value="23">23</option>
+              <option value="24">24</option>
+              <option value="25">25</option>
+              <option value="26">26</option>
+              <option value="27">27</option>
+              <option value="28">28</option>
+              <option value="29">29</option>
+              <option value="30">30</option>
+              <option value="31">31</option>
+
+              <!-- Add more day options as needed -->
+            </select>
+          </li>
+          <li class="nav-item">
+            <label for="page" class="form-label">Page:</label>
+            <select class="form-select" id="page">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+
+              <!-- Add more page options as needed -->
+            </select>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-primary" onclick="loadImage()">
+              Load Image
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="image-container">
+            <img src="" id="base64-image" alt="Base64 Image" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>&copy; 2023 blacksmithop</p>
+    </div>
+
+    <script>
+      // API endpoint to retrieve the image
+      const apiEndpoint =
+        "https://dataextraction-backend.azurewebsites.net/read/2023/11/4/1/";
+
+      // Preload dropdown values from the example URL
+      const urlParams = new URL(apiEndpoint);
+      const splitUrl = urlParams.pathname.split("/");
+      document.getElementById("year").value = splitUrl[2];
+      document.getElementById("month").value = splitUrl[3];
+      document.getElementById("date").value = splitUrl[4];
+      document.getElementById("page").value = splitUrl[5];
+
+      function loadImage() {
+        const year = document.getElementById("year").value;
+        const month = document.getElementById("month").value;
+        const date = document.getElementById("date").value;
+        const page = document.getElementById("page").value;
+
+        // Construct the API endpoint with selected parameters
+        const apiEndpoint = `https://dataextraction-backend.azurewebsites.net/read/${year}/${month}/${date}/${page}`;
+
+        console.log(apiEndpoint);
+
+        // Function to fetch the image from the API and display it
+        async function fetchAndDisplayImage() {
+          try {
+            // Fetch the data from the API
+            const response = await fetch(apiEndpoint);
+            const data = await response.json();
+
+            // Get the base64-encoded image data from the API response
+            const base64ImageData = data.data;
+
+            // Set the source of the image
+            const imageElement = document.getElementById("base64-image");
+            imageElement.src = "data:image/jpeg;base64," + base64ImageData; // Replace 'jpeg' with the actual image format
+          } catch (error) {
+            console.error("Error fetching and displaying the image:", error);
+          }
+        }
+
+        // Call the fetchAndDisplayImage function when the button is clicked
+        fetchAndDisplayImage();
+      }
+
+      // Load the image on page load
+      loadImage();
+    </script>
+
+    <!-- Include Bootstrap JavaScript (optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
